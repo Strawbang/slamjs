@@ -1,0 +1,42 @@
+extends layout
+
+block content
+  div(id='wrapper')
+
+    div(id='main')
+      div(class='inner')
+
+        header(id='header')
+          h1= title       
+
+        section(id='banner')
+          div(class='content')
+            form#formAddFigurant(name="addevenement",method="post",action="/insertEvenement/addevenement")
+              input#inputFigurantIdentifiant(type="text", placeholder="nom", name="nom")
+              input#inputFigurantName(type="text", placeholder="nom", name="type")
+              input#inputFigurantPrenom(type="text", placeholder="debut", name="dateDebut")
+              input#inputFigurantEmail(type="text", placeholder="email", name="dateFin")
+              button#btnSubmit(type="submit") submit
+
+    div(id='sidebar')
+      div(class='inner')
+
+        nav(id='menu')
+          header(class='major')
+            h2= 'Menu'
+
+          ul
+            li
+              a(href='/') Accueil
+            li
+              a(href='/figurants') Liste des figurants
+            li
+              a(href='/insertFigurant') Insertion d'un figurant
+            li
+              a(href='/evenements') Liste des evenements
+            li
+              a(href='/insertEvenement') Insertion d'un evenement
+       
+        footer(id='footer')
+          p(class='copyright')= 'BTS SIO SLAM.'
+    
