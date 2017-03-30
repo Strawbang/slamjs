@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var evenement = require('../models/evenement');
+var role = require('../models/role');
 
 /* Liste des figurants */
 router.get('/', function(req, res, next) {

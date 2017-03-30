@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
 
 var demandeFigurationSchema = new mongoose.Schema({
-    "type" : String,
-    "date" : String,
+    "_figurant" : [{type : mongoose.Schema.Types.ObjectId, ref: 'figurant'}],
+    "_offreRole" : [{type: mongoose.Schema.Types.ObjectId, ref: 'offreRole'}],
+    "etat" : String,
+    "dateAjout" : String
 });
