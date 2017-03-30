@@ -4,7 +4,7 @@ var figurantSchema = new mongoose.Schema({
     "identifiant" : String,
     "nom" : String,
     "prenom" : String,
-    "evenement" : [{ type: mongoose.Schema.Types.ObjectId, ref: 'evenement' }],
+    //"evenement" : [{ type: mongoose.Schema.Types.ObjectId, ref: 'evenement' }],
     "email" : String
 });
 
