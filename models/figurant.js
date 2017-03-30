@@ -5,7 +5,7 @@ var figurantSchema = new mongoose.Schema({
     "nom" : String,
     "prenom" : String,
     //"evenement" : [{ type: mongoose.Schema.Types.ObjectId, ref: 'evenement' }],
-    "email" : String
+    "email" : {type : String, index: {unique: true}}
 });
 
 module.exports = mongoose.model('figurant',figurantSchema,'figurant');
