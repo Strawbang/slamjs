@@ -6,3 +6,5 @@ var demandeFigurationSchema = new mongoose.Schema({
     "etat" : String,
     "dateAjout" : String
 });
+
+module.exports = mongoose.model('demandeFiguration',offreRoleSchema,'demandeFiguration');
