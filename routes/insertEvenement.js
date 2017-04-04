@@ -2,31 +2,31 @@ var express = require('express');
 var router = express.Router();
 var evenement = require('../models/evenement');
 
-/* Liste des utilisateurs */
+/* Liste des évenements */
 router.get('/', function(req, res, next) {
   res.render('insertEvenement', { "title" : "Ajout d'un evenement" });
 });
 
-/* Ajout d'un utilisateur */
-router.post('/addevenement', function(req, res) {
+/* Ajout d'un évenements */
+router.post('/add', function(req, res) {
     // Récupération des valeurs du formulaire
     var evenementNom = req.body.nom;
     var evenementType = req.body.type;
-    var evenementDebut = req.body.dateDebut;
-    var evenementFin = req.body.dateFin;
+    var evenementDate = req.body.date;
+    var evenementNbJours = req.body.nbJours;
 
-    // Création de l'objet utilisateur suivant le schéma
+    // Création de l'objet evenement suivant le schéma
     var newEvenement = new evenement({
         "nom" : evenementNom,
         "type" : evenementType,
-        "debut" : evenementDebut,
-        "fin" : evenementFin
+        "date" : evenementDate,
+        "nbJours" : evenementNbJours
     });
 
     newEvenement.save( function (err, doc) {
         if (err) {
             // Retour d'une erreur
-            res.send("Pas glop !");
+            res.send("Pas d'evenement !");
         }
         else {
             // Redirection vers la liste

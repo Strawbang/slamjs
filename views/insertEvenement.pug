@@ -11,11 +11,13 @@ block content
 
         section(id='banner')
           div(class='content')
-            form#formAddFigurant(name="addevenement",method="post",action="/insertEvenement/addevenement")
-              input#inputFigurantIdentifiant(type="text", placeholder="nom", name="nom")
-              input#inputFigurantName(type="text", placeholder="nom", name="type")
-              input#inputFigurantPrenom(type="text", placeholder="debut", name="dateDebut")
-              input#inputFigurantEmail(type="text", placeholder="email", name="dateFin")
+            form#formAddEvenement(name="addevenement",method="post",action="/insertEvenement/addevenement")
+              input#inputEvenementNom(type="text", placeholder="nom", name="nom")
+              select#selectEvenementType(type="text", placeholder="type", name="type")
+                option Film
+                option Spectacle
+              input#inputEvenementDate(type="text", placeholder="date", name="date")
+              input#inputEvenementNbJours(type="text", placeholder="nbJours", name="nbJours")
               button#btnSubmit(type="submit") submit
 
     div(id='sidebar')

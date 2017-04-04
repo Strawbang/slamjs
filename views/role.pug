@@ -15,20 +15,11 @@ block content
             table
               tr
                 th Nom
-                th Type
-                th NombreJours
-                th Actions
               tr
-                each evenement, i in evenementlist
+                each role, i in rolelist
                   tr
                     td
-                      = evenement.nom
-                    td
-                      = evenement.type
-                    td
-                      = evenement.nombreJours
-                    td
-                      a(href='/figurants/delete/' + evenement._id) Delete
+                      = role.nom
 
     div(id='sidebar')
       div(class='inner')

@@ -1,10 +1,10 @@
 var mongoose = require('mongoose');
 
-//Create Schema
-var offreRoleSchema = new mongoose Schema({
-    '_evenement' : [{ type : mongoose.Schema.Types.ObjectId, ref: 'evenement'}],
-    '_role' : [{type: mongoose.Schema.Types.ObjectId, ref: 'role'}],
-    'nbRoles' : Number
-})
+// Create schema
+var offreRoleSchema  = new mongoose.Schema({
+    "evenement" : [{ type: mongoose.Schema.Types.ObjectId, ref: 'evenement' }],
+    "role" : [{ type: mongoose.Schema.Types.ObjectId, ref: 'role' }],
+    "nbRole" : Number
+});
 
 module.exports = mongoose.model('offreRole',offreRoleSchema,'offreRole');

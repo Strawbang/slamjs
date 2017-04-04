@@ -2,24 +2,50 @@ var express = require('express');
 var router = express.Router();
 var evenement = require('../models/evenement');
 var role = require('../models/role');
+var offreRole = require('../models/offreRole');
+var demandeFiguration = require('../models/demandeFiguration');
 
 /* Liste des figurants */
 router.get('/', function(req, res, next) {
  evenement.find({},{},function(e,docs){
   res.render('evenements', {
-   "title" : "Liste des evenements",
+   "title" : "Liste des événements",
    "evenementlist" : docs
   });
  });
 });
 
-/* Supprimer un figurant */
-router.get('/delete/:id', function(req, res) {
+/* Supprimer un evenement */
+router.get('/delete/:id', function(req, res, next) {
     var id = req.params.id;
-        evenement.findByIdAndRemove(id, function(e, docs){
-    //console.log(figurant)
-    res.redirect('/evenements');
+
+    //Recuperation de l'id de l'evenement dans le model offreRole
+    var idEvenement = {'evenement': id};
+    //Recuperation de l'id de l'offre dans le model offreRole
+    var idOffre = {'role': id}
+    
+      evenement.findByIdAndRemove(id, function(err){
+        demandeFiguration.findByIdAndRemove(idOffre,function(err){
+          offreRole.findByIdAndRemove(idEvenement,function(err){
+          if (err) res.send('error');
+          res.send('succes');
+        //res.redirect('/evenements');
+      });
+    });
   });
+});
+
+/* Supprimer l'offre lié à l'évenement */
+router.get('/delete/:id/offre/:idOffre', function(req, res, next) {    
+    id = req.params.id;
+    idOffre = req.params.idOffre;
+
+    demandeFiguration.findByIdAndRemove({ 'offre': idOffre }, function (err) {
+        offreRole.findByIdAndRemove({ 'id' : idOffre, 'evenement' : id }, function (err) {
+            if (err) return handleError(err);
+            res.send("success");
+        });
+    });
 });
 
 /* Modifier un figurant */
