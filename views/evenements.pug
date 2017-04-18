@@ -22,6 +22,7 @@ block content
                 each evenement, i in evenementlist
                   tr
                     td
+                      a(href='/evenements/' + evenement._id)
                       = evenement.nom
                     td
                       = evenement.type
