@@ -15,7 +15,30 @@ router.get('/', function(req, res, next) {
  });
 });
 
-/* Supprimer un evenement */
+/* Delete évènement par son id */
+router.get('/delete/:id', function(req, res, next) {    
+    id = req.params.id;
+
+    //Récupère les id des offres liés à l'évènement pour supprimer les postulation liés avec ces offres
+    offreRole.find({"_event" : id},{},function(e,offreDocs){
+        var arrayIdOffre = [];
+
+        for(var i = 0; offreDocs.length > i; i++){
+            arrayIdOffre.push(offreDocs[i]._id);
+        }
+
+        evenement.remove({ "_id": id }, function (err) {
+            demandeFiguration.remove({ "_offre": { $in: arrayIdOffre } }, function (err) {
+                offreRole.remove({ "_event": id }, function (err) {
+                    if (err) res.send('error');
+                    res.send('success');
+                });
+            });
+        });
+    });
+});
+
+/* 
 router.get('/delete/:id', function(req, res, next) {
     var id = req.params.id;
 
@@ -34,6 +57,7 @@ router.get('/delete/:id', function(req, res, next) {
     });
   });
 });
+*/
 
 /* Supprimer l'offre lié à l'évenement */
 router.get('/delete/:id/offre/:idOffre', function(req, res, next) {    
@@ -110,7 +134,7 @@ router.get('/:id', function(req, res, next) {
                     arrayIdOffre.push(offreDocs[i]._id);
                 }
                 
-                demandeFiguration.find({ "offre": { $in: arrayIdOffre } },{},function(e,demandeFigurationnDocs){
+                demandeFiguration.find({ "_offre": { $in: arrayIdOffre } },{},function(e,demandeFigurationDocs){
                     res.render('event', {
                         "title" : "Evénement",
                         "eventlist" : eventDocs,
@@ -119,18 +143,15 @@ router.get('/:id', function(req, res, next) {
                         "demandeFigurationlist" : demandeFigurationDocs
 
                     })    
-                }).populate('event')
-                    .populate('figurant')
-                    .populate('offre').populate({path: 'offre', populate: {path: 'role' , model: 'role'} });
+                }).populate('_event')
+                    .populate('_figurant')
+                    .populate('_offre').populate({path: '_offre', populate: {path: '_role' , model: 'role'} });
                 //Le populate est un processus de remplacement automatique des chemins spécifiés
                 //dans l'object par des objects provenant d'autres collections
-                }).populate('role');
+                }).populate('_role');
             });
         });
 });
-
-
-
 
 /* Modifier un figurant */
 /*router.get('/edit/:id', function(req, res) {

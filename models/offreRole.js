@@ -2,8 +2,8 @@ var mongoose = require('mongoose');
 
 // Create schema
 var offreRoleSchema  = new mongoose.Schema({
-    "evenement" : [{ type: mongoose.Schema.Types.ObjectId, ref: 'evenement' }],
-    "role" : [{ type: mongoose.Schema.Types.ObjectId, ref: 'role' }],
+    "_evenement" : [{ type: mongoose.Schema.Types.ObjectId, ref: 'evenement' }],
+    "_role" : [{ type: mongoose.Schema.Types.ObjectId, ref: 'role' }],
     "nbRole" : Number
 });
 

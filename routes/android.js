@@ -22,20 +22,20 @@ router.get('/evenements', function(req, res, next) {
 });
 
 /* Liste des offres d'un évènement JSon */
-router.get('/event/:id/offre', function(req, res, next) {
+router.get('/evenements/:id/offre', function(req, res, next) {
     var response = {};
     idEvent = req.params.id;
 
     //Recherche les offres avec l'id '_event'  
-    offre.find({"evenement" : idEvent},{},function(err,offres){
+    offre.find({"_event" : idEvent},{},function(err,offre){
         if (err) {
             response = {"error" : true,"message" : "Error fetching data"};
         } else {
-            response = {offres};
+            response = {offre};
         }
         //Retourne un tableau de toutes les offres en JSON
         res.json(response);
-    }).populate('role');
+    }).populate('_role');
     //Le populate est un processus de remplacement automatique des chemins spécifiés
     //dans l'object par des objects provenant d'autres collections
 });
@@ -68,7 +68,7 @@ router.get('/offre/:id/event', function(req, res, next) {
         }
 
         res.json(response);
-    }).populate('evenement');
+    }).populate('_evenement');
     //Le populate est un processus de remplacement automatique des chemins spécifiés
     //dans l'object par des objects provenant d'autres collections
 });
@@ -87,7 +87,7 @@ router.get('/offre/:id', function(req, res, next) {
         }
         //Retourne l'offre demandé au format JSON
         res.json(response);
-    }).populate('evenement').populate('role');
+    }).populate('_evenement').populate('_role');
     //Le populate est un processus de remplacement automatique des chemins spécifiés
     //dans l'object par des objects provenant d'autres collections
 });
@@ -124,7 +124,7 @@ router.post('/demandeFiguration/:idOffre/:email', function(req, res, next) {
         }
 
         //Recherche si la demande du figurant n'existe pas
-        demandeFiguration.findById({"figurant": id,"offre": idOffre},{},function(e,docs){
+        demandeFiguration.findById({"_figurant": id,"_offre": idOffre},{},function(e,docs){
             //Si la demande du figurant n'existe pas
             if(!docs){
                 //Date actuelle
@@ -160,7 +160,7 @@ router.post('/demandeFiguration/:idOffre/:email', function(req, res, next) {
 
 
 /* Liste des postulations par figurant (avec email) JSon */
-router.get('/postu/:email', function(req, res, next) {
+router.get('/demandeFiguration/:email', function(req, res, next) {
     var response = {};
     emailFigurant = req.params.email;
 
@@ -171,7 +171,7 @@ router.get('/postu/:email', function(req, res, next) {
         }
         else{
             //On recherche les postulation du figurant avec son id
-            demandeFiguration.find({ "_figurant" : docs._id},{},function(err, postulations){
+            demandeFiguration.find({ "figurant" : docs._id},{},function(err, postulations){
                 if (err) {
                     response = {"error" : true,"message" : "Error fetching data"};
                 } else {
@@ -180,8 +180,8 @@ router.get('/postu/:email', function(req, res, next) {
                 //Retourne les postulations du figurant
                 res.json(response);
             }).populate('_figurant')
-                .populate({path: 'offre',populate: {path: 'event', model: 'event'}})
-                .populate({path: 'offre', populate: {path: 'role' , model: 'role'} });
+                .populate({path: '_offre',populate: {path: '_evenement', model: 'event'}})
+                .populate({path: '_offre', populate: {path: '_role' , model: 'role'} });
             //Le populate est un processus de remplacement automatique des chemins spécifiés
             //dans l'object par des objects provenant d'autres collections
         }

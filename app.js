@@ -15,7 +15,6 @@ dba.on('error', console.error.bind(console, 'MongoDB connection error:'));
 var index = require('./routes/index');
 var figurants = require ('./routes/figurants')
 var android = require('./routes/android');
-var insertFigurant = require('./routes/insertFigurant');
 var evenements = require('./routes/evenements');
 var insertEvenement = require('./routes/insertEvenement');
 var role = require('./routes/role');
@@ -41,7 +40,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/android', android);
-app.use('/insertFigurant', insertFigurant);
 app.use('/figurants', figurants);
 app.use('/evenements', evenements);
 app.use('/insertEvenement', insertEvenement);
