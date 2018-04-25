@@ -18,6 +18,7 @@ block content
                 th Nom
                 th Prénom
                 th Email
+                th Téléphone
                 th Actions
               tr
                 each figurant, i in figurantlist
@@ -29,12 +30,21 @@ block content
                     td
                       = figurant.prenom
                     td
+                      = figurant.telephone
+                    td
                       = figurant.email
                     td
                       a(href='/figurants/delete/' + figurant._id) Delete
                       br
                       a(href='/figurants/edit/' + figurant._id) Edit
+          form(id="addFigurant", name="addFigurant",method="post",action="/figurants/add")
+              input(id="identifiant", type="text", placeholder="Identifiant", name="identifiant")
+              input(id="nom", type="text", placeholder="Nom", name="nom")
+              input(id="prenom", type="text", placeholder="Prenom", name="prenom")
+              input(id="telephone", type="tel", placeholder="Telephone", name="telephone")
+              input(id="email", type="text", placeholder="Email", name="email")
 
+              button#btnSubmit(type="submit") Ajouter utilisateurs
     div(id='sidebar')
       div(class='inner')
 

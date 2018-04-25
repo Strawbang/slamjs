@@ -12,24 +12,24 @@ block content
         section(id='banner')
           div(class='content')
             header
-            table
-              tr
-                th Nom
-                th Type
-                th NombreJours
-                th Actions
-              tr
+              p= 'Listes des événements'
+              table
+                tr
+                  td Nom
+                  td Type
+                  td Date
+                  td Nombre jours
+                  
                 each evenement, i in evenementlist
                   tr
-                    td
-                      a(href='/evenements/' + evenement._id)
+                    td/a(href='/evenements/'+evenement._id)
                       = evenement.nom
                     td
                       = evenement.type
                     td
-                      = evenement.nombreJours
+                      = evenement.date                    
                     td
-                      a(href='/evenements/delete/' + evenement._id) Delete
+                      = evenement.nombreJours
 
     div(id='sidebar')
       div(class='inner')

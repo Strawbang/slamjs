@@ -1,0 +1,98 @@
+extends layout
+
+block content
+  div(id='wrapper')
+
+    div(id='main')
+      div(class='inner')
+        
+        header(id='header')
+          h1= title
+          
+        section(id='banner')
+          div(class='content')
+            header              
+                ul
+                  li Nom : 
+                    = evenementlist.nom
+                  li Type : 
+                    = evenementlist.type
+                  li Date : 
+                    = evenementlist.date
+                  li Nombre jours : 
+                    = evenementlist.nombreJours
+                 
+                table
+                  tr
+                    td Rôles demandés
+                    td Nombres demandés
+                    td 
+                    each offre, i in offrelist
+                      tr
+                        td
+                          = offre._role.nom
+                        td
+                          = offre.nbRoles
+                        td/button(onclick="deleteOffre('"+evenementlist._id+"', '"+offre._id+"')") Supprimer
+                    
+                form#formAddEventRole(name="addEventRole",method="post",action="/evenements/"+ evenementlist._id +"/role/add")
+                  input#inputRoleNbFigurant(type="text", placeholder="Nombre", name="nbFigurant")
+                  select#inputRoleName(placeholder="Name", name="roleId")
+                    option -- Rôle --
+                    each role, i in rolelist
+                      option(value=role._id)= role.nom
+                  button#btnSubmit(type="submit") Ajouter rôle 
+                  
+                table
+                  tr
+                    td Rôles 
+                    td Nom Figurant
+                    td Etat
+                    td Modifier état
+                    each postulation, i in postulationlist
+                      tr
+                        td
+                          = postulation._offre._role.nom       
+                        td
+                          = postulation._acteur.email
+                        td
+                          = postulation.etat
+                        td 
+                          form(id="updateEtat", name="updateEtat", method="post", action="/events/"+ evenementlist._id+"/update/"+postulation._id)
+                            input(id='idEvent', value= evenementlist._id, type='hidden')
+                            input(id='idPostulation', value= postulation._id, type='hidden')
+                            select(id="etat", name="etat")
+                              option -- Changer Etat--
+                                if(postulation.etat == "En attente")
+                                  option(value="Retenu") Retenue
+                                  option(value="Refuser") Refuser 
+                                if(postulation.etat == "Retenu")
+                                  option(value="Accepter") Accepter
+                                  option(value="Refuser") Refuser
+                                if(postulation.etat == "Accepter" || postulation.etat == "Refuser")
+                                  option(value="Terminer") Terminer
+                            button#btnSubmit(type="submit") Modifier
+                
+                
+                button(onclick="deleteEvent('"+evenementlist._id+"')") Supprimer
+    div(id='sidebar')
+      div(class='inner')
+
+        nav(id='menu')
+          header(class='major')
+            h2= 'Menu'
+
+          ul
+            li
+              a(href='/') Accueil
+            li
+              a(href='/figurants') Liste des figurants
+            li
+              a(href='/role') Liste des roles
+            li
+              a(href='/evenements') Liste des evenements
+            li
+              a(href='/insertEvenement') Insertion d'un evenement
+       
+        footer(id='footer')
+          p(class='copyright')= 'BTS SIO SLAM.'

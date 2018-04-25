@@ -13,14 +13,14 @@ router.post('/add', function(req, res) {
     var evenementNom = req.body.nom;
     var evenementType = req.body.type;
     var evenementDate = req.body.date;
-    var evenementNbJours = req.body.nbJours;
+    var evenementNbJours = req.body.nombreJours;
 
     // Création de l'objet evenement suivant le schéma
     var newEvenement = new evenement({
         "nom" : evenementNom,
         "type" : evenementType,
         "date" : evenementDate,
-        "nbJours" : evenementNbJours
+        "nombreJours" : evenementNbJours
     });
 
     newEvenement.save( function (err, doc) {

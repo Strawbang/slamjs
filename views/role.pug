@@ -13,21 +13,23 @@ block content
           div(class='content')
             header
 
-            p= 'Listes des rôles'
-              
-            form(id="addRole", name="addRole",method="post",action="/role/add")
-              input(id="name", type="text", placeholder="Nom", name="name")
-              
-              button#btnSubmit(type="submit") Ajouter rôle
+            p= title
 
             table
               tr
                 th Nom
+                th Actions
               tr
                 each role, i in rolelist
                   tr
                     td
                       = role.nom
+                    td
+                      a(href='/role/delete/' + role._id) Delete
+            form(id="addRole", name="addRole",method="post",action="/role/add")
+              input(id="name", type="text", placeholder="Nom", name="name")
+              
+              button#btnSubmit(type="submit") Ajouter rôle
 
     div(id='sidebar')
       div(class='inner')

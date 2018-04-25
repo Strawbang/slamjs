@@ -13,7 +13,7 @@ var dba = mongoose.connection;
 dba.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 var index = require('./routes/index');
-var figurants = require ('./routes/figurants')
+var figurants = require ('./routes/figurants');
 var android = require('./routes/android');
 var evenements = require('./routes/evenements');
 var insertEvenement = require('./routes/insertEvenement');

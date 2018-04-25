@@ -1,37 +1,38 @@
 var express = require('express');
 var router = express.Router();
-var evenement = require('../models/evenement');
+var event = require('../models/evenement');
 var offre = require('../models/offreRole');
-var role = require('../models/role');
-var demandeFiguration = require('../models/demandeFiguration');
-var figurant = require('../models/figurant');
+var roles = require('../models/role');
+var postulation = require('../models/postulation');
+var figurant = require('../models/acteur');
 
-/* Liste des évenements par JSon */
-router.get('/evenements', function(req, res, next) {
-  var response = {};
- 
-  evenement.find({},function(err,evenement){
-   if (err) {
-    response = {"error" : true,"message" : "Error fetching data"};
-   } else {
-     response = {data};
-    }
+/* Liste des évènements JSon */
+router.get('/events', function(req, res, next) {
+    var response = {};
 
-   res.json(response);
-  });
+    event.find({},{},function(err,events){
+        if (err) {
+            response = {"error" : true,"message" : "Error fetching data"};
+        } else {
+            response = {events};
+        }
+        //Retourne un tableau de tous les évènements au format json
+        res.json(response);
+    });
 });
 
+
 /* Liste des offres d'un évènement JSon */
-router.get('/evenements/:id/offre', function(req, res, next) {
+router.get('/event/:id/offre', function(req, res, next) {
     var response = {};
     idEvent = req.params.id;
 
     //Recherche les offres avec l'id '_event'  
-    offre.find({"_event" : idEvent},{},function(err,offre){
+    offre.find({"_evenement" : idEvent},{},function(err,offres){
         if (err) {
             response = {"error" : true,"message" : "Error fetching data"};
         } else {
-            response = {offre};
+            response = {offres};
         }
         //Retourne un tableau de toutes les offres en JSON
         res.json(response);
@@ -40,31 +41,33 @@ router.get('/evenements/:id/offre', function(req, res, next) {
     //dans l'object par des objects provenant d'autres collections
 });
 
+
 /* Liste des offres JSon */
-router.get('/offre', function(req, res, next) {
+router.get('/offres', function(req, res, next) {
     var response = {};
 
     roles.find({},{},function(err,roles){
         if (err) {
             response = {"error" : true,"message" : "Error fetching data"};
         } else {
-            response = {role};
+            response = {roles};
         }
 
         res.json(response);
     });
 });
 
+
 /* Liste des rôles par évènement JSon */
-router.get('/offre/:id/event', function(req, res, next) {
+router.get('/offres/:id/events', function(req, res, next) {
     var response = {};
     idRole = req.params.id;
 
-    offre.find({"role" : idRole},{},function(err,offre){
+    offre.find({"_role" : idRole},{},function(err,offres){
         if (err) {
             response = {"error" : true,"message" : "Error fetching data"};
         } else {
-            response = {offre};
+            response = {offres};
         }
 
         res.json(response);
@@ -73,17 +76,18 @@ router.get('/offre/:id/event', function(req, res, next) {
     //dans l'object par des objects provenant d'autres collections
 });
 
+
 /* Détails de l'offre en JSON */
 router.get('/offre/:id', function(req, res, next) {
     var response = {};
     idOffre = req.params.id;
 
     //Recherche une offre correspondante à l'id envoyé
-    offre.findById({"_id" : idOffre},{},function(err,offre){
+    offre.findOne({"_id" : idOffre},{},function(err,offres){
         if (err) {
             response = {"error" : true,"message" : "Error fetching data"};
         } else {
-            response = {offre};
+            response = {offres};
         }
         //Retourne l'offre demandé au format JSON
         res.json(response);
@@ -93,14 +97,14 @@ router.get('/offre/:id', function(req, res, next) {
 });
 
 
-/* Le figurant fait une demande de figuration avec son email à une offre */
-router.post('/demandeFiguration/:idOffre/:email', function(req, res, next) {
+/* Le figurant postule avec son email à une offre */
+router.post('/postule/:idOffre/:email', function(req, res, next) {
     //Récupère les données de l'url
     idOffre = req.params.idOffre;
     emailFigurant = req.params.email;
 
     //Recherche du figurant avec l'email dans la base de données
-    figurant.findById({"email" : emailFigurant},{},function(e,docs){
+    figurant.findOne({"email" : emailFigurant},{},function(e,docs){
         var id = null;
 
         //Si l'email ne correspond à aucun figurant on creer un nouveau figurant
@@ -123,9 +127,9 @@ router.post('/demandeFiguration/:idOffre/:email', function(req, res, next) {
             id = docs._id;
         }
 
-        //Recherche si la demande du figurant n'existe pas
-        demandeFiguration.findById({"_figurant": id,"_offre": idOffre},{},function(e,docs){
-            //Si la demande du figurant n'existe pas
+        //Recherche si la postulation du figurant n'existe pas
+        postulation.findOne({"_acteur": id,"_offre": idOffre},{},function(e,docs){
+            //Si la postulation du figurant n'existe pas
             if(!docs){
                 //Date actuelle
                 var date = new Date();
@@ -134,14 +138,14 @@ router.post('/demandeFiguration/:idOffre/:email', function(req, res, next) {
                 var annee = date.getYear();
                 var dateAjout = jour+"/"+mois+"/"+annee;
 
-                var newDemandeFiguration = new demandeFiguration({
-                    "figurant" : id,
-                    "offre" : idOffre,
+                var newPostulation = new postulation({
+                    "_acteur" : id,
+                    "_offre" : idOffre,
                     "etat" : "En attente",
                     "dateAjout" : dateAjout
                 }); 
 
-                newDemandeFiguration.save( function (err, doc) {
+                newPostulation.save( function (err, doc) {
                     if (err) {
                         // Retour d'une erreur
                         res.send("Postulation refusé");
@@ -160,7 +164,7 @@ router.post('/demandeFiguration/:idOffre/:email', function(req, res, next) {
 
 
 /* Liste des postulations par figurant (avec email) JSon */
-router.get('/demandeFiguration/:email', function(req, res, next) {
+router.get('/postu/:email', function(req, res, next) {
     var response = {};
     emailFigurant = req.params.email;
 
@@ -171,7 +175,7 @@ router.get('/demandeFiguration/:email', function(req, res, next) {
         }
         else{
             //On recherche les postulation du figurant avec son id
-            demandeFiguration.find({ "figurant" : docs._id},{},function(err, postulations){
+            postulation.find({ "_acteur" : docs._id},{},function(err, postulations){
                 if (err) {
                     response = {"error" : true,"message" : "Error fetching data"};
                 } else {
@@ -179,8 +183,8 @@ router.get('/demandeFiguration/:email', function(req, res, next) {
                 }
                 //Retourne les postulations du figurant
                 res.json(response);
-            }).populate('_figurant')
-                .populate({path: '_offre',populate: {path: '_evenement', model: 'event'}})
+            }).populate('_acteur')
+                .populate({path: '_offre',populate: {path: '_evenement', model: 'evenement'}})
                 .populate({path: '_offre', populate: {path: '_role' , model: 'role'} });
             //Le populate est un processus de remplacement automatique des chemins spécifiés
             //dans l'object par des objects provenant d'autres collections
@@ -188,11 +192,11 @@ router.get('/demandeFiguration/:email', function(req, res, next) {
     });
 });
 
-router.delete('/demandeFiguration/:id/delete', function(req, res, next) {
+router.delete('/postulation/:id/delete', function(req, res, next) {
     id = req.params.id;
 
     //On cherche le figurant correspondant à l'email
-    demandeFiguration.remove({ "_id": id }, function (err) {
+    postulation.remove({ "_id": id }, function (err) {
         if (err) return handleError(err);
         res.send('Supprimé !')
     });

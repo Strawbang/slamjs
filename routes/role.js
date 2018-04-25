@@ -33,5 +33,13 @@ router.post('/add', function(req, res) {
     });
 });
 
+/* Supprimer un rôle */
+router.get('/delete/:id', function(req, res) {
+    var id = req.params.id;
+        role.findByIdAndRemove(id, function(e, docs){
+    res.redirect('/role');
+  });
+});
+
 
 module.exports = router;
